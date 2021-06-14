@@ -52,7 +52,7 @@ if __name__ == '__main__':
             running_loss += loss.item()
             if i % 2000 == 1999:  # print every 2000 mini-batches
                 print(
-                    f"[{epoch + 1}\ti+1]\tloss: {running_loss / 2000}\t"
+                    f"[{epoch + 1}\t{i+1}]\tloss: {running_loss / 2000}\t"
                     f"acc: {accuracy_score(gold_labels, pred_labels)}")
                 running_loss = 0.0
 
