@@ -1,0 +1,1 @@
+poetry run python -m ipykernel install --user --name dialogue_act_classification --display-name "Dialogue Act Classification"

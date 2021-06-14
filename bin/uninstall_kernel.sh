@@ -1,0 +1,1 @@
+jupyter kernelspec uninstall dialogue_act_classification
