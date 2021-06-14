@@ -7,9 +7,9 @@ import os
 root = '/mount/studenten/dialog-system/2021/teams/mauldasch/data/audios'
 output = {}
 for audio in os.listdir(root):
-    path = os.path.join(root,audio)
-    (rate,sig) = wav.read(path)
-    mfcc_feat = mfcc(sig,rate)
+    path = os.path.join(root, audio)
+    (rate, sig) = wav.read(path)
+    mfcc_feat = mfcc(sig, rate)
     output[audio] = mfcc_feat.tolist()
 print("number of audios:", len(output))
 with open('audio_feat.json', 'w', encoding='utf-8') as f:
