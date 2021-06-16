@@ -33,7 +33,7 @@ class SpeechCnn(nn.Module):
         )  # ask daniel
 
         self.fc = nn.Linear(
-            self.output_pool_width * self.output_pool_height * 6, 4)
+            self.output_pool_width * self.output_pool_height * 6, 50) # to reduce the dimensions, [50,100] is fine
 
     def forward(self, x):
         batch_size, frame_size, mffc_nr = x.shape
