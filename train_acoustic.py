@@ -5,7 +5,7 @@ from sklearn.metrics import accuracy_score
 from torch.utils.data import DataLoader
 
 from acoustic_model.speech_cnn import SpeechCnn
-from acoustic_model.dac_dataset import DacDataset
+from dataset.dac_dataset import DacDataset
 
 DATA_PATH = "./data"
 
