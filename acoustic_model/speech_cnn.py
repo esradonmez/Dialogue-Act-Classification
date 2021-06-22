@@ -15,9 +15,11 @@ class SpeechCnn(nn.Module):
     def __init__(self):
         super().__init__()
 
+        # to reduce the dimensions, [50,100] is fine
+        self.output_dimension = 50
+
         self.output_pool_width = pool_output_dim(
             conv_output_dim(13, 5, 1, 0), 5, 3, 0)
-
         self.output_pool_height = pool_output_dim(
             conv_output_dim(3361, 5, 1, 0), 5, 3, 0)
 
@@ -33,7 +35,8 @@ class SpeechCnn(nn.Module):
         )  # ask daniel
 
         self.fc = nn.Linear(
-            self.output_pool_width * self.output_pool_height * 6, 50) # to reduce the dimensions, [50,100] is fine
+            self.output_pool_width * self.output_pool_height * 6,
+            self.output_dimension)
 
     def forward(self, x):
         batch_size, frame_size, mffc_nr = x.shape
