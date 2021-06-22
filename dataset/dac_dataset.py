@@ -4,7 +4,7 @@ from pathlib import Path
 import numpy as np
 from torch.utils.data.dataset import T_co
 from torch.utils.data import IterableDataset
-
+from transformers import BertTokenizer
 
 LABEL_MAP = {
     "backchannel": 0,
@@ -56,8 +56,9 @@ class DacDataset(IterableDataset):
         return len(self.documents)
 
     def __getitem__(self, doc_id) -> T_co:
-        return self.documents[doc_id]["label_id"], self._load_audio_feat(doc_id)
+        doc = self.documents[doc_id]
+        return doc["label_id"], (doc["text"], self._load_audio_feat(doc_id))
 
     def __iter__(self):
-        for doc_id, doc in self.documents.items():
-            yield doc["label_id"], self._load_audio_feat(doc_id)
+        for doc_id in self.documents.keys():
+            yield self.__getitem__(doc_id)
