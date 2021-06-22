@@ -13,4 +13,4 @@ run
 
 ## training
 run
-`python train.py` from the root folder to train
+`python train_combined.py` from the root folder to train the combined model
