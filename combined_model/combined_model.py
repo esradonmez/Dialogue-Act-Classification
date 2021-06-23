@@ -26,7 +26,7 @@ class CombinedModel(nn.Module):
             lexical_input,  # Sentence to encode.
             add_special_tokens=True,  # Add '[CLS]' and '[SEP]'
             max_length=128,  # Pad & truncate all sentences.
-            pad_to_max_length=True,
+            padding='max_length',
             return_attention_mask=True,  # Construct attn. masks.
             return_tensors='pt',  # Return pytorch tensors.
         ))

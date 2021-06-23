@@ -12,6 +12,7 @@ from dataset import DacDataset
 from language_model import ContextAwareDAC
 
 DATA_PATH = "./data"
+CACHE_PATH = "./cache/dac.ckpt"
 
 if __name__ == '__main__':
     learning_rate = 0.001
@@ -67,3 +68,6 @@ if __name__ == '__main__':
         print(
             f"Finished epoch {epoch + 1}\t"
             f"acc: {accuracy_score(gold_labels, pred_labels)}")
+
+        # save the model
+        torch.save(model.state_dict(), CACHE_PATH+str(epoch+1))
