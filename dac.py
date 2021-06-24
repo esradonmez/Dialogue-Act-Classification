@@ -140,8 +140,4 @@ if __name__ == '__main__':
 
     args = parser.parse_args()
 
-    if args.finetune and args.resume_checkpoint is None:
-        print("Need to provide path to checkpoint to fine-tune from!")
-        sys.exit()
-
     run(gpu_id=args.gpu_id,model_dir=args.model_save_dir)
