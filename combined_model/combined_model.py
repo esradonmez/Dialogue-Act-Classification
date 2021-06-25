@@ -6,30 +6,20 @@ class CombinedModel(nn.Module):
     def __init__(self,
                  acoustic_model: nn.Module,
                  lexical_model: nn.Module,
-                 lexical_tokenizer
                  ):
         super().__init__()
 
         self.acoustic_model = acoustic_model
         self.lexical_model = lexical_model
-        self.lexical_tokenizer = lexical_tokenizer
 
         self.fc = nn.Linear(
             self.acoustic_model.output_dimension +
             self.lexical_model.output_dimension, 4)
 
-    def forward(self, combined_input):
-        lexical_input, acoustic_input = combined_input
+    def forward(self, lexical_input, acoustic_input):
 
         acoustic_x = self.acoustic_model(acoustic_input.float())
-        lexical_x = self.lexical_model(**self.lexical_tokenizer(
-            lexical_input,  # Sentence to encode.
-            add_special_tokens=True,  # Add '[CLS]' and '[SEP]'
-            max_length=128,  # Pad & truncate all sentences.
-            padding='max_length',
-            return_attention_mask=True,  # Construct attn. masks.
-            return_tensors='pt',  # Return pytorch tensors.
-        ))
+        lexical_x = self.lexical_model(input_ids=lexical_input[0], attention_mask=lexical_input[1])
 
         # print("acoustic_x", acoustic_x.size())
         # print("lexical_x", lexical_x.size())
