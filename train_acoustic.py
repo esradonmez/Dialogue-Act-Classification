@@ -32,14 +32,14 @@ if __name__ == '__main__':
         running_loss = 0.0
         for i, data in enumerate(dataloader, 0):
 
-            labels, inputs = data
+            labels, lexical_input, acoustic_input = data
             gold_labels.extend(labels)
 
             # zero the parameter gradients
             optimizer.zero_grad()
 
             # forward
-            outputs = model(inputs.float())
+            outputs = model(acoustic_input.float())
 
             pred_labels.extend(torch.argmax(torch.softmax(outputs, 1), 1))
 
