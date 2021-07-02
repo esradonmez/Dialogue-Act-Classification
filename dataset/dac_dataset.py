@@ -4,8 +4,8 @@ from pathlib import Path
 import numpy as np
 import torch
 from torch.utils.data.dataset import T_co
-from torch.utils.data import Dataset, IterableDataset
-from transformers import RobertaTokenizer
+from torch.utils.data import IterableDataset
+from transformers import AutoTokenizer
 
 LABEL_MAP = {
     "backchannel": 0,
@@ -16,12 +16,15 @@ LABEL_MAP = {
 
 
 class DacDataset(IterableDataset):
-    def __init__(self, dataset_path: str, audio_feat_dir: str):
+    def __init__(self,
+                 dataset_path: str,
+                 audio_feat_dir: str,
+                 tokenizer: str = "roberta-base"):
         self.audio_feat_dir = Path(audio_feat_dir)
         self.dataset_path = Path(dataset_path)
 
         self.max_len = None
-        self.tokenizer = RobertaTokenizer.from_pretrained("roberta-base")
+        self.tokenizer = AutoTokenizer.from_pretrained(tokenizer)
         self._load_audio_meta_data()
         self.max_len_text = 100
 

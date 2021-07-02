@@ -4,7 +4,6 @@ import random
 import torch.optim as optim
 from sklearn.metrics import accuracy_score
 from torch.utils.data import DataLoader
-from transformers import RobertaTokenizer
 from tqdm import tqdm
 
 from acoustic_model import SpeechCnn
@@ -42,7 +41,8 @@ if __name__ == '__main__':
 
     validset = DacDataset(
         f"{DATA_PATH}/dev.txt",
-        f"{DATA_PATH}/audio_features"
+        f"{DATA_PATH}/audio_features",
+        "roberta-base"
     )
     trainloader = DataLoader(trainset, batch_size=batch_size)
     validloader = DataLoader(validset, batch_size=batch_size)
