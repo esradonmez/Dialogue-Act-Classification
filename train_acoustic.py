@@ -14,7 +14,7 @@ if __name__ == '__main__':
     batch_size = 8
     epochs = 5
 
-    model = SpeechCnn()
+    model = SpeechCnn(conv_kernel=(5, 13), pool_kernel=(5, 1))
 
     criterion = nn.CrossEntropyLoss()
     optimizer = optim.Adam(model.parameters(), lr=learning_rate)
