@@ -2,6 +2,7 @@ import logging
 import os
 import random
 import numpy as np
+from pathlib import Path
 
 import torch
 import torch.nn as nn
@@ -30,6 +31,9 @@ stream_handler.setLevel(logging.INFO)
 logger.addHandler(stream_handler)
 
 if __name__ == '__main__':
+    # make sure CACHE_PATH exists
+    Path(CACHE_PATH).mkdir(exist_ok=True)
+
     logging.basicConfig(filename='speechCNN.log', filemode='w', format='%(name)s - %(levelname)s - %(message)s')
     learning_rate = 0.001
     batch_size = 8
