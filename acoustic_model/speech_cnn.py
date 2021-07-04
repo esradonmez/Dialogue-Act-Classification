@@ -17,8 +17,8 @@ class SpeechCnn(nn.Module):
     def __init__(self,
                  conv_kernel: Tuple[int, int] = (5, 5),
                  pool_kernel: Tuple[int, int] = (5, 5),
-                 pool_stride: int = 3,
-                 output_dimension: int = 50
+                 pool_stride: int = 1,
+                 output_dimension: int = 128
                  ):
         super().__init__()
 
@@ -38,9 +38,11 @@ class SpeechCnn(nn.Module):
 
         self.conv = nn.Conv2d(
             in_channels=1,
-            out_channels=6,
+            out_channels=13,
             kernel_size=(self.conv_kernel_height, self.conv_kernel_width)
         )
+
+        self.dropout=nn.Dropout(0.5)
 
         self.pool = nn.MaxPool2d(
             kernel_size=(self.pool_kernel_height, self.pool_kernel_width),
@@ -48,14 +50,14 @@ class SpeechCnn(nn.Module):
         )
 
         self.fc = nn.Linear(
-            self.output_pool_width * self.output_pool_height * 6,
+            self.output_pool_width * self.output_pool_height * 13,
             self.output_dimension)
 
     def forward(self, x):
         batch_size, frame_size, mffc_nr = x.shape
         x = x.view(batch_size, 1, frame_size, mffc_nr)
 
-        x = self.pool(F.relu(self.conv(x)))
+        x = self.pool(self.dropout(F.relu(self.conv(x))))
         x = torch.flatten(x, 1)  # flatten all dimensions except batch
         x = self.fc(x)
         return x

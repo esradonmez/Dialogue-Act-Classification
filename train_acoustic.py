@@ -2,7 +2,6 @@ import logging
 import os
 import random
 import numpy as np
-from pathlib import Path
 
 import torch
 import torch.nn as nn
@@ -31,27 +30,24 @@ stream_handler.setLevel(logging.INFO)
 logger.addHandler(stream_handler)
 
 if __name__ == '__main__':
-    # make sure CACHE_PATH exists
-    Path(CACHE_PATH).mkdir(exist_ok=True)
-
     logging.basicConfig(filename='speechCNN.log', filemode='w', format='%(name)s - %(levelname)s - %(message)s')
     learning_rate = 0.001
     batch_size = 8
-    epochs = 10
+    epochs = 50
 
     set_seed(42)
 
-    file_handler = logging.FileHandler(os.path.join(CACHE_PATH, 'acoustic_5_13.txt'))
+    file_handler = logging.FileHandler(os.path.join(CACHE_PATH, 'log.txt'))
     file_handler.setFormatter(formatter)
     file_handler.setLevel(logging.DEBUG)
     logger.addHandler(file_handler)
 
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
-    model = SpeechCnn(conv_kernel=(5, 13), pool_kernel=(5, 1))
+    model = SpeechCnn(conv_kernel=(10, 13), pool_kernel=(10, 1))
     model.to(device)
 
-    logger.info("Filter size: %s", (5, 13))
+    logger.info("Filter size: %s", (10, 13))
 
     criterion = nn.CrossEntropyLoss()
     optimizer = optim.Adam(model.parameters(), lr=learning_rate)
@@ -69,7 +65,6 @@ if __name__ == '__main__':
     validloader = DataLoader(validset, batch_size=batch_size)
 
     for epoch in range(epochs):
-        logger.info("Epoch: %5d", epoch)
         gold_labels = []
         pred_labels = []
 
@@ -98,15 +93,15 @@ if __name__ == '__main__':
 
             # print statistics
             running_loss += loss.item()
-            if i % 2000 == 1999:  # print every 2000 mini-batches
-                print(
-                    f"[{epoch + 1}\t{i+1}]\tloss: {running_loss / 2000}\t"
-                    f"acc: {accuracy_score(gold_labels, pred_labels)}")
-                running_loss = 0.0
+            #if i % 2000 == 1999:  # print every 2000 mini-batches
+            #    print(
+            #        f"[{epoch + 1}\t{i+1}]\tloss: {running_loss / 2000}\t"
+            #        f"acc: {accuracy_score(gold_labels, pred_labels)}")
+            #    running_loss = 0.0
 
-        print(
-            f"Finished epoch {epoch + 1}\t"
-            f"acc: {accuracy_score(gold_labels, pred_labels)}")
+        #print(
+        #    f"Finished epoch {epoch + 1}\t"
+        #    f"acc: {accuracy_score(gold_labels, pred_labels)}")
         
         # Tracking variables
         total_eval_loss = 0
@@ -130,11 +125,12 @@ if __name__ == '__main__':
         avg_val_loss = total_eval_loss / len(validloader)
         #print("average_validation_loss:", avg_val_loss)
 
-        print(
-            f"Finished epoch {epoch + 1}\n"
-            f"Training accuracy: {accuracy_score(gold_labels, pred_labels)}\n"
-            f"Validation accuracy: {accuracy_score(gold_labels_val, pred_labels_val)}")
-            
+        #print(
+        #    f"Finished epoch {epoch + 1}\n"
+        #    f"Training accuracy: {accuracy_score(gold_labels, pred_labels)}\n"
+        #    f"Validation accuracy: {accuracy_score(gold_labels_val, pred_labels_val)}")
+
+        logger.info("Epoch: %5d", epoch+1)    
         logger.info("Average validation loss: %.5f", avg_val_loss)
-        logger.info("Training accuracy: %.2f", accuracy_score(gold_labels, pred_labels))
-        logger.info("Validation accuracy: %.2f", accuracy_score(gold_labels_val, pred_labels_val))
+        logger.info("Training accuracy: %.4f", accuracy_score(gold_labels, pred_labels))
+        logger.info("Validation accuracy: %.4f", accuracy_score(gold_labels_val, pred_labels_val))
