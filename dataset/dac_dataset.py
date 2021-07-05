@@ -73,7 +73,7 @@ class DacDataset(IterableDataset):
         items = {}
         items['input_ids'], items['input_mask'] = self.preprocess_text(doc['text'])
         items['audio_feat'] = torch.tensor(self._load_audio_feat(doc_id),
-                                           dtype=torch.float64)
+                                           dtype=torch.float)
         items['label'] = torch.tensor(doc['label_id'], dtype=torch.long)
 
         return items['label'], (items['input_ids'], items['input_mask']), items[
