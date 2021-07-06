@@ -84,7 +84,8 @@ def train(
             if model_type == "acoustic":
                 outputs = model(acoustic_input)
             elif model_type == "lexical":
-                outputs = model(lexical_input)
+                outputs = model(input_ids=lexical_input[0],
+                                attention_mask=lexical_input[1])
             elif model_type == "combined":
                 outputs = model(lexical_input, acoustic_input)
             else:
