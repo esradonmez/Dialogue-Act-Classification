@@ -6,7 +6,7 @@ import torch.nn as nn
 import torch.optim as optim
 from dotenv import load_dotenv
 from sklearn.metrics import accuracy_score
-from torch.utils.data import DataLoader
+from torch.utils.data import DataLoader, WeightedRandomSampler
 
 from dataset import DacDataset
 from utils import setup_logger, set_seed
@@ -30,12 +30,15 @@ def train(
         epochs: int = 10,
         learning_rate: float = 0.001,
         balance_loss: bool = False,
+        balance_data: bool = False
 ):
+    assert not (balance_loss and balance_data)
     param_format = format_parameters(
         batch_size=batch_size,
         epochs=epochs,
         learning_rate=learning_rate,
-        balance_loss=balance_loss
+        balance_loss=balance_loss,
+        balance_data=balance_data
     )
     logger = setup_logger(__name__, Path(LOG_PATH, model_type, f"{param_format}.log"))
     set_seed(42)
@@ -46,7 +49,12 @@ def train(
         f"{DATA_PATH}/train.txt",
         f"{DATA_PATH}/audio_features"
     )
-    train_loader = DataLoader(train_set, batch_size=batch_size)
+    train_sample_weight = [train_set.class_weights[doc["label_id"]]
+                           for doc in train_set.documents]
+    train_sampler = WeightedRandomSampler(train_sample_weight, len(train_sample_weight))
+    train_loader = DataLoader(train_set,
+                              batch_size=batch_size,
+                              sampler=train_sampler if balance_data else None)
 
     val_set = DacDataset(
         f"{DATA_PATH}/dev.txt",
