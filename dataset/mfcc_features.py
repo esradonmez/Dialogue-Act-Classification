@@ -1,4 +1,3 @@
-import os
 import json
 from pathlib import Path
 
@@ -6,11 +5,6 @@ import numpy as np
 import scipy.io.wavfile as wav
 from python_speech_features import mfcc
 from tqdm import tqdm
-
-
-def prepare_folder(folder_path: Path):
-    if not folder_path.exists():
-        os.mkdir(folder_path)
 
 
 def generate_mfcc_features(input_dir: Path, output_dir: Path):

@@ -1,6 +1,7 @@
 # Project specific
-data/
 cache/
+data/
+logs/
 
 
 # Created by https://www.toptal.com/developers/gitignore/api/pycharm+all,visualstudiocode,python
