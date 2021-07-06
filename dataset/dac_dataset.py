@@ -4,7 +4,7 @@ from pathlib import Path
 import numpy as np
 import torch
 from torch.utils.data.dataset import T_co
-from torch.utils.data import IterableDataset
+from torch.utils.data import Dataset
 from transformers import AutoTokenizer
 
 LABEL_MAP = {
@@ -15,7 +15,7 @@ LABEL_MAP = {
 }
 
 
-class DacDataset(IterableDataset):
+class DacDataset(Dataset):
     def __init__(self,
                  dataset_path: str,
                  audio_feat_dir: str,
@@ -79,10 +79,6 @@ class DacDataset(IterableDataset):
 
         return items['label'], (items['input_ids'], items['input_mask']), items[
             'audio_feat']
-
-    def __iter__(self):
-        for doc_id in self.documents.keys():
-            yield self.__getitem__(doc_id)
 
     def preprocess_text(self, text):
 
