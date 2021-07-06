@@ -44,7 +44,7 @@ if __name__ == '__main__':
 
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
-    model = SpeechCnn(conv_kernel=(10, 13), pool_kernel=(10, 1))
+    model = SpeechCnn(conv_kernel=(10, 13), pool_kernel=(10, 1), pool_stride=6)
     model.to(device)
 
     logger.info("Filter size: %s", (10, 13))
@@ -61,7 +61,7 @@ if __name__ == '__main__':
             f"{DATA_PATH}/dev.txt",
             f"{DATA_PATH}/audio_features"
         )
-    trainloader = DataLoader(trainset, batch_size=batch_size)
+    trainloader = DataLoader(trainset, batch_size=batch_size, shuffle=True)
     validloader = DataLoader(validset, batch_size=batch_size)
 
     for epoch in range(epochs):
