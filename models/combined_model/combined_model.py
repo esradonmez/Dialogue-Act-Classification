@@ -19,10 +19,9 @@ class CombinedModel(nn.Module):
     def forward(self, lexical_input, acoustic_input):
 
         acoustic_x = self.acoustic_model(acoustic_input.float())
-        lexical_x = self.lexical_model(input_ids=lexical_input[0], attention_mask=lexical_input[1])
-
-        # print("acoustic_x", acoustic_x.size())
-        # print("lexical_x", lexical_x.size())
+        lexical_x = self.lexical_model(
+            input_ids=lexical_input[0],
+            attention_mask=lexical_input[1])
 
         # concat
         concat_x = torch.cat([acoustic_x, lexical_x.view(-1, 128*100)], dim=1)

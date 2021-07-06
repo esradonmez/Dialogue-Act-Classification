@@ -1,4 +1,5 @@
 import json
+from collections import Counter
 from pathlib import Path
 
 import numpy as np
@@ -28,10 +29,13 @@ class DacDataset(Dataset):
         self._load_audio_meta_data()
         self.max_len_text = 100
 
-        self.documents = self._load_documents()
+        self.documents = None
+        self.class_weights = None
+        self._load_documents()
 
     def _load_documents(self):
         documents = []
+        label_counter = Counter()
 
         with open(self.dataset_path) as file_pointer:
             for index, line in enumerate(file_pointer):
@@ -43,11 +47,17 @@ class DacDataset(Dataset):
                         "label_id": LABEL_MAP[label],
                         "text": text
                     })
-        return documents
+                    label_counter.update([label])
+        self.documents = documents
+
+        document_number = len(label_counter)
+        class_weights = [None] * len(LABEL_MAP)
+        for label, index in LABEL_MAP.items():
+            class_weights[index] = label_counter[label] / document_number
+        self.class_weights = torch.tensor(class_weights, dtype=torch.float)
 
     def _load_audio_feat(self, doc_id: str) -> np.ndarray:
-        with open(Path(self.audio_feat_dir, f"{doc_id}.npy"), "rb") as file_pointer:
-            audio_feat = np.load(file_pointer)
+        audio_feat = np.load(str(Path(self.audio_feat_dir, f"{doc_id}.npy")))
 
         feat_len = audio_feat.shape[0]
 
@@ -59,29 +69,7 @@ class DacDataset(Dataset):
 
         self.max_len = meta["max_len"]
 
-    def __len__(self):
-        return len(self.documents)
-
-    """
-    def __getitem__(self, doc_id) -> T_co:
-        doc = self.documents[doc_id]
-        return doc["label_id"], (doc["text"], self._load_audio_feat(doc_id))
-    """
-
-    def __getitem__(self, doc_id) -> T_co:
-        doc = self.documents[doc_id]
-
-        items = {}
-        items['input_ids'], items['input_mask'] = self.preprocess_text(doc['text'])
-        items['audio_feat'] = torch.tensor(self._load_audio_feat(doc["doc_id"]),
-                                           dtype=torch.float)
-        items['label'] = torch.tensor(doc['label_id'], dtype=torch.long)
-
-        return items['label'], (items['input_ids'], items['input_mask']), items[
-            'audio_feat']
-
-    def preprocess_text(self, text):
-
+    def _preprocess_text(self, text):
         tokens = self.tokenizer.tokenize(text)
 
         input_ids = self.tokenizer.convert_tokens_to_ids(tokens)
@@ -95,3 +83,18 @@ class DacDataset(Dataset):
 
         return torch.tensor(input_ids, dtype=torch.long), torch.tensor(input_mask,
                                                                        dtype=torch.long)
+
+    def __len__(self):
+        return len(self.documents)
+
+    def __getitem__(self, doc_id) -> T_co:
+        doc = self.documents[doc_id]
+
+        items = {}
+        items['input_ids'], items['input_mask'] = self._preprocess_text(doc['text'])
+        items['audio_feat'] = torch.tensor(self._load_audio_feat(doc["doc_id"]),
+                                           dtype=torch.float)
+        items['label'] = torch.tensor(doc['label_id'], dtype=torch.long)
+
+        return items['label'], (items['input_ids'], items['input_mask']), items[
+            'audio_feat']

@@ -18,7 +18,7 @@ class SpeechCnn(nn.Module):
                  conv_kernel: Tuple[int, int] = (5, 5),
                  pool_kernel: Tuple[int, int] = (5, 5),
                  pool_stride: int = 1,
-                 output_dimension: int = 128
+                 output_dimension: int = 4
                  ):
         super().__init__()
 
