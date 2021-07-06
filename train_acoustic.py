@@ -9,8 +9,8 @@ import torch.optim as optim
 from sklearn.metrics import accuracy_score
 from torch.utils.data import DataLoader
 
-from acoustic_model.speech_cnn import SpeechCnn
-from dataset.dac_dataset import DacDataset
+from models import SpeechCnn
+from dataset import DacDataset
 
 DATA_PATH = "./data"
 CACHE_PATH = "./cache"
@@ -31,8 +31,8 @@ logger.addHandler(stream_handler)
 
 if __name__ == '__main__':
     logging.basicConfig(filename='speechCNN.log', filemode='w', format='%(name)s - %(levelname)s - %(message)s')
-    learning_rate = 0.001
-    batch_size = 8
+    learning_rate = 0.0001
+    batch_size = 16
     epochs = 50
 
     set_seed(42)
@@ -71,9 +71,9 @@ if __name__ == '__main__':
         running_loss = 0.0
         for i, data in enumerate(trainloader, 0):
 
-            labels, lexical_input, acoustic_input = data
+            labels, _, acoustic_input = data
             labels = labels.to(device)
-            lexical_input = (lexical_input[0].to(device),lexical_input[1].to(device))
+            # lexical_input = (lexical_input[0].to(device),lexical_input[1].to(device))
             acoustic_input = acoustic_input.to(device)
 
             gold_labels.extend(labels.cpu())
@@ -109,9 +109,9 @@ if __name__ == '__main__':
         pred_labels_val = []
 
         for data in validloader:
-            labels, lexical_input, acoustic_input = data
+            labels, _, acoustic_input = data
             labels = labels.to(device)
-            lexical_input = (lexical_input[0].to(device),lexical_input[1].to(device))
+            # lexical_input = (lexical_input[0].to(device),lexical_input[1].to(device))
             acoustic_input = acoustic_input.to(device)
 
             gold_labels_val.extend(labels.cpu())
