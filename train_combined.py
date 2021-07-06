@@ -6,10 +6,8 @@ from sklearn.metrics import accuracy_score
 from torch.utils.data import DataLoader
 from tqdm import tqdm
 
-from acoustic_model import SpeechCnn
-from combined_model import CombinedModel
 from dataset import DacDataset
-from language_model import ContextAwareDAC
+from models import CombinedModel, ContextAwareDAC, SpeechCnn
 
 DATA_PATH = "./data"
 CACHE_PATH = "./cache/dac"
