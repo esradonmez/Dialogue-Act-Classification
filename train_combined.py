@@ -1,7 +1,11 @@
+import os
+
 import torch
 import torch.nn as nn
 import random
 import torch.optim as optim
+from dotenv import load_dotenv
+from pathlib import Path
 from sklearn.metrics import accuracy_score
 from torch.utils.data import DataLoader
 from tqdm import tqdm
@@ -9,8 +13,9 @@ from tqdm import tqdm
 from dataset import DacDataset
 from models import CombinedModel, ContextAwareDAC, SpeechCnn
 
-DATA_PATH = "./data"
-CACHE_PATH = "./cache/dac"
+load_dotenv(".env")
+DATA_PATH = os.getenv("SDS_DAC_DATA_PATH", "./data")
+CACHE_PATH = Path(os.getenv('SDS_DAC_CACHE_PATH', './cache'), "combined")
 
 if __name__ == '__main__':
     learning_rate = 0.001

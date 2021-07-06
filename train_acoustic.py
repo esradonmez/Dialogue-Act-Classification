@@ -1,19 +1,24 @@
 import logging
 import os
 import random
+from pathlib import Path
+
 import numpy as np
 
 import torch
 import torch.nn as nn
 import torch.optim as optim
+from dotenv import load_dotenv
 from sklearn.metrics import accuracy_score
 from torch.utils.data import DataLoader
 
 from models import SpeechCnn
 from dataset import DacDataset
 
-DATA_PATH = "./data"
-CACHE_PATH = "./cache"
+load_dotenv(".env")
+DATA_PATH = os.getenv("SDS_DAC_DATA_PATH", "./data")
+CACHE_PATH = Path(os.getenv('SDS_DAC_CACHE_PATH', './cache'), "acoustic")
+
 
 def set_seed(seed):
     random.seed(seed)
