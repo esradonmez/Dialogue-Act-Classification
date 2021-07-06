@@ -31,17 +31,18 @@ class DacDataset(IterableDataset):
         self.documents = self._load_documents()
 
     def _load_documents(self):
-        documents = {}
+        documents = []
 
         with open(self.dataset_path) as file_pointer:
-            for line in file_pointer:
+            for index, line in enumerate(file_pointer):
                 if line.strip():
                     id_, label, text = line.strip().split("\t")
-                    documents[id_] = {
+                    documents.append({
+                        "doc_id": id_,
                         "label": label,
                         "label_id": LABEL_MAP[label],
                         "text": text
-                    }
+                    })
         return documents
 
     def _load_audio_feat(self, doc_id: str) -> np.ndarray:
@@ -72,7 +73,7 @@ class DacDataset(IterableDataset):
 
         items = {}
         items['input_ids'], items['input_mask'] = self.preprocess_text(doc['text'])
-        items['audio_feat'] = torch.tensor(self._load_audio_feat(doc_id),
+        items['audio_feat'] = torch.tensor(self._load_audio_feat(doc["doc_id"]),
                                            dtype=torch.float)
         items['label'] = torch.tensor(doc['label_id'], dtype=torch.long)
 
