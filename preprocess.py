@@ -1,6 +1,6 @@
 from pathlib import Path
 
-from acoustic_model.mfcc_features import prepare_folder, generate_mfcc_features
+from dataset import prepare_folder, generate_mfcc_features
 
 DATA_PATH = "./data"
 
