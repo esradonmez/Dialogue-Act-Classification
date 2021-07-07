@@ -4,6 +4,7 @@ import logging
 import torch
 import numpy as np
 from pathlib import Path
+from torch import nn
 
 
 def set_seed(seed):
@@ -11,6 +12,10 @@ def set_seed(seed):
     np.random.seed(seed)
     torch.manual_seed(seed)
 
+def weights_init(m):
+    if isinstance(m, nn.Conv2d):
+        torch.nn.init.xavier_uniform_(m.weight)
+        torch.nn.init.zeros_(m.bias)
 
 def setup_logger(name: str, file_path: Path) -> logging.Logger:
     file_path.parent.mkdir(parents=True, exist_ok=True)

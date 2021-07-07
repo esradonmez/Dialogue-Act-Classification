@@ -9,7 +9,7 @@ from sklearn.metrics import accuracy_score
 from torch.utils.data import DataLoader, WeightedRandomSampler
 
 from dataset import DacDataset
-from utils import setup_logger, set_seed
+from utils import setup_logger, set_seed, weights_init
 
 load_dotenv(".env")
 LOG_PATH = Path(os.getenv("SDS_DAC_LOG_PATH", "./logs"))
@@ -66,6 +66,7 @@ def train(
     class_weights = train_set.class_weights.to(DEVICE)
     criterion = nn.CrossEntropyLoss(weight=class_weights if balance_loss else None)
     optimizer = optim.Adam(model.parameters(), lr=learning_rate)
+    model.apply(weights_init)
 
     # parameters for early stopping
     es_min_val_loss = 10000
