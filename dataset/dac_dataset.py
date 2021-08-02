@@ -27,7 +27,7 @@ class DacDataset(Dataset):
         self.max_len = None
         self.tokenizer = AutoTokenizer.from_pretrained(tokenizer)
         self._load_audio_meta_data()
-        self.max_len_text = 100
+        self.max_len_text = 128
 
         self.documents = None
         self.class_weights = None
