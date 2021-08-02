@@ -13,16 +13,17 @@ DEVICE = torch.device(
 
 class ContextAwareDAC(nn.Module):
 
-    def __init__(self, model_name="roberta-base", hidden_size=768,
+    def __init__(self, mode="all", model_name="roberta-base", hidden_size=768,
                  output_size=100):
         super().__init__()
-
+        self.mode = mode
         self.output_dimension = 128 * 100
         self.in_features = 2 * hidden_size
 
         # utterance encoder model
         self.utterance_rnn = UtteranceRNN(model_name=model_name,
-                                          hidden_size=hidden_size)
+                                          hidden_size=hidden_size,
+                                          mode=mode)
 
         # context aware self attention module
         self.context_aware_attention = ContextAwareAttention(
@@ -43,23 +44,32 @@ class ContextAwareDAC(nn.Module):
 
         # final project layer, output_features should be changed based on features of
         # cnn model
-        self.fc = nn.Linear(in_features=4096, out_features=100, bias=False)
+
+        self.fc1 = nn.Linear(in_features=768, out_features=100, bias=False)
+        self.fc2 = nn.Linear(in_features=1536, out_features=100, bias=False)
 
     def forward(self, input_ids, attention_mask):
         """
             batch [input_id, attention_mask, label, audio_feat]
         """
+
         batch_size, _ = input_ids.shape
         outputs = self.utterance_rnn(
             input_ids=input_ids,
             attention_mask=attention_mask,
             seq_len=[input_ids.shape[1] for _ in range(batch_size)])
+        if self.mode == "onlylm":
+            return self.fc1(outputs)  # (batch_size,max_len,100)
 
-        # hidden
-        hx = self.hx
-        m = self.context_aware_attention(
-            hidden_states=outputs,
-            h_forward=hx[0].detach())
-        self.hx = hx.detach()
+        elif self.mode == "lmrnn":
+            return self.fc2(outputs)  # (batch_size,max_len,100)
 
-        return m
+        else:
+            # hidden
+            hx = self.hx
+            m = self.context_aware_attention(
+                hidden_states=outputs,
+                h_forward=hx[0].detach())
+            self.hx = hx.detach()
+
+            return m

@@ -5,9 +5,9 @@ from transformers import AutoModel
 class UtteranceRNN(nn.Module):
 
     def __init__(self, model_name="roberta-base", hidden_size=768, bidirectional=True,
-                 num_layers=1):
+                 num_layers=1, mode="all"):
         super(UtteranceRNN, self).__init__()
-
+        self.mode=mode
         # embedding layer is replaced by pretrained roberta's embedding
         self.base = AutoModel.from_pretrained(pretrained_model_name_or_path=model_name)
         # freeze the model parameters
@@ -28,7 +28,11 @@ class UtteranceRNN(nn.Module):
         """
             x.shape = [batch_size, seq_len]
         """
-        hidden_states = self.base(input_ids, attention_mask).last_hidden_state
+
+
+        hidden_states, _ = self.base(input_ids, attention_mask)
+        if self.mode == "onlylm":
+            return hidden_states
         # hidden_states.shape = [batch, max_len, hidden_size]
 
         # padding and packing
@@ -42,9 +46,9 @@ class UtteranceRNN(nn.Module):
 
         # outputs, _ = nn.utils.rnn.pad_packed_sequence(packed_outputs,
         # batch_first=True)
+        else:
+            outputs, _ = self.rnn(hidden_states)
 
-        outputs, _ = self.rnn(hidden_states)
+            # print("Utterance shape", outputs.shape)  # [batch, max_len, hidden_size=1536]
 
-        # print("Utterance shape", outputs.shape)  # [batch, max_len, hidden_size=1536]
-
-        return outputs
+            return outputs

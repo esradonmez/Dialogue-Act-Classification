@@ -15,7 +15,7 @@ class ContextAwareAttention(nn.Module):
         self.fc_2 = nn.Linear(in_features=output_size, out_features=128, bias=False)
 
         # linear projection
-        self.linear_projection = nn.Linear(in_features=hidden_size, out_features=100,
+        self.linear_projection = nn.Linear(in_features=hidden_size , out_features=100,
                                            bias=True)
 
     def forward(self, hidden_states, h_forward):
@@ -27,9 +27,10 @@ class ContextAwareAttention(nn.Module):
         A = S.softmax(dim=-1)
 
         # Compute the sentence representation
-        M = torch.matmul(A.permute(0, 2, 1), hidden_states)
-
+        M = torch.matmul(A.permute(0, 2, 1), hidden_states)  # (batch,max_len,1536)
+        batch_size= M.shape[0]
         # linear projection of the sentence
         x = self.linear_projection(M)
+        x = x.view(batch_size,-1,100)
 
         return x
