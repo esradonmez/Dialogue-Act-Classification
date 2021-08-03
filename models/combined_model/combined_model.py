@@ -49,4 +49,4 @@ class CombinedModel(nn.Module):
             # concat
             concat_x = torch.cat([acoustic_x, lexical_x.view(-1, 128*100)], dim=1)
 
-        return self.fc(concat_x)
+            return self.fc(concat_x)
