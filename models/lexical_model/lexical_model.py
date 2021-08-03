@@ -20,6 +20,5 @@ class LexicalModel(nn.Module):
     def forward(self, input_ids, attention_mask):
         batch_size = input_ids.shape[0]
         output = self.dac(input_ids, attention_mask)
-        output = output.view(batch_size,-1)
 
         return self.fc(output)
