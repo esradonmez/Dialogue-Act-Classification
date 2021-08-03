@@ -1,15 +1,9 @@
-# Used only for training lexical model
-# Three modes:
-#   default "all" includes pretrained roberta, rnn and attention layers
-#           "onlylm" includes only pretrained roberta
-#           "lmrnn" includes pretrained roberta and rnn layers 
-
 from models import LexicalModel
 from utils import train
 
 def run(mode):
 
-    model = LexicalModel(mode)
+    model = LexicalModel(mode=mode)
 
     # define training parameters
     learning_rate = 0.0001
@@ -23,4 +17,4 @@ def run(mode):
 
 
 if __name__ == '__main__':
-   run(mode="lmrnn")
+   run(mode="onlylm")
