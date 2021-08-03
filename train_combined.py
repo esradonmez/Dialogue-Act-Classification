@@ -15,7 +15,8 @@ if __name__ == '__main__':
     # define combined model parameters
     model = CombinedModel(
         acoustic_model=acoustic_model,
-        lexical_model=lexical_model
+        lexical_model=lexical_model,
+        attention=True
     )
 
     # define training parameters
