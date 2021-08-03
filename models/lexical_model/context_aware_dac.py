@@ -59,10 +59,10 @@ class ContextAwareDAC(nn.Module):
             attention_mask=attention_mask,
             seq_len=[input_ids.shape[1] for _ in range(batch_size)])
         if self.mode == "onlylm":
-            return self.fc1(outputs)  # (batch_size,max_len,100)
+            return self.fc1(outputs).view(batch_size,-1)  # (batch_size,max_len*100)
 
         elif self.mode == "lmrnn":
-            return self.fc2(outputs)  # (batch_size,max_len,100)
+            return self.fc2(outputs).view(batch_size,-1)  # (batch_size,max_len*100)
 
         else:
             # hidden
