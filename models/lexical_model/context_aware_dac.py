@@ -71,5 +71,5 @@ class ContextAwareDAC(nn.Module):
                 hidden_states=outputs,
                 h_forward=hx[0].detach())
             self.hx = hx.detach()
-
+            m = m.view(batch_size,-1)
             return m
