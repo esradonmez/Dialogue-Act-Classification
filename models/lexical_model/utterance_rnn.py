@@ -47,7 +47,7 @@ class UtteranceRNN(nn.Module):
         # outputs, _ = nn.utils.rnn.pad_packed_sequence(packed_outputs,
         # batch_first=True)
         else:
-            outputs, _ = self.rnn(hidden_states)
+            outputs, _ = self.rnn(base_outputs.last_hidden_state)
 
             # print("Utterance shape", outputs.shape)  # [batch, max_len, hidden_size=1536]
 
