@@ -7,7 +7,7 @@ class UtteranceRNN(nn.Module):
     def __init__(self, model_name="roberta-base", hidden_size=768, bidirectional=True,
                  num_layers=1, mode="all"):
         super(UtteranceRNN, self).__init__()
-        self.mode=mode
+        self.mode = mode
         # embedding layer is replaced by pretrained roberta's embedding
         self.base = AutoModel.from_pretrained(pretrained_model_name_or_path=model_name)
         # freeze the model parameters
