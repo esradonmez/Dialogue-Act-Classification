@@ -29,10 +29,10 @@ class UtteranceRNN(nn.Module):
             x.shape = [batch_size, seq_len]
         """
 
-
-        hidden_states, _ = self.base(input_ids, attention_mask)
+        # hidden_states, other_stuff = self.base(input_ids, attention_mask)
+        base_outputs = self.base(input_ids, attention_mask)
         if self.mode == "onlylm":
-            return hidden_states
+            return base_outputs.last_hidden_state
         # hidden_states.shape = [batch, max_len, hidden_size]
 
         # padding and packing
