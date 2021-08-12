@@ -1,8 +1,8 @@
 from models import LexicalModel
 from utils import train
 
-def run(mode):
 
+def run(mode):
     model = LexicalModel(mode=mode)
 
     # define training parameters
@@ -17,4 +17,4 @@ def run(mode):
 
 
 if __name__ == '__main__':
-   run(mode="onlylm")
+    run(mode="onlylm")
