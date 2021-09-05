@@ -2,7 +2,9 @@
 name = "dialogue_act_classification"
 version = "0.1.0"
 description = ""
-authors = ["chris <chris.schaller@posteo.de>"]
+authors = ["chris <chris.schaller@posteo.de>",
+            "esra donmez <nlp.esra@gmail.com>",
+            "wei zhou"]
 
 [tool.poetry.dependencies]
 python = ">=3.8,<3.10"
