@@ -19,17 +19,14 @@ To extract MFFCs from the audio files, run
 
 ## Training
 To train the models, run the following commands from the root folder.
----
 - For the combined model:
 ```
 python train_combined.py
 ```
----
 - For the lexical model:
 ```
 python train_lexical.py
 ```
----
 - For the acoustic model:
 ```
 python train_acoustic.py
