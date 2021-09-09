@@ -28,5 +28,6 @@ python train_combined.py
 python train_lexical.py
 ```
 - For acoustic model:
-```python train_acoustic.py
+```
+python train_acoustic.py
 ```
