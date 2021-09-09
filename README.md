@@ -29,4 +29,4 @@ python train_lexical.py
 ```
 - For acoustic model:
 ```python train_acoustic.py
-```from the root folder
+```
