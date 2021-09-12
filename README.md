@@ -13,9 +13,15 @@ Install them using pip or [poetry](https://python-poetry.org/)
 
 Make sure the required data is available.
 
+## Content
+- Root folder contains all the files that need to be run for the preprocessing (i.e. preprocess.py) and training (i.e. train_combined.py, train_lexical.py, train_acoustic.py).
+- dataset folder contains the file to create DAC dataset (i.e. dac_dataset.py) and the script to extract the MFCC features from the audio files (i.e. mfcc_features.py).
+- File that contains the training loop can be found under utils folder along with other utilities.
+- models folder contains all the code for the acoustic and the lexical model as well as the combined model.
+
 ## Preprocessing 
 To extract MFFCs from the audio files, run
-`python preprocess.py` from the root folder
+`python preprocess.py` from the root folder.
 
 ## Training
 To train the models, run the following commands from the root folder.
